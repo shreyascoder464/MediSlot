@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Doctor Verification')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav('Admin Panel')}"></nav>
+<main class="container">
+    <h1>Doctor Verification</h1>
+    <div class="alert success" th:if="${param.approved}">Doctor approved.</div>
+    <div class="alert success" th:if="${param.rejected}">Doctor rejected.</div>
+    <div class="alert success" th:if="${param.suspended}">Doctor suspended.</div>
+    <section class="panel table-wrap">
+        <table>
+            <tr><th>Name</th><th>Reg No</th><th>Specialization</th><th>Clinic</th><th>Fee</th><th>Status</th><th>Action</th></tr>
+            <tr th:each="d : ${doctors}">
+                <td><strong th:text="${d.user.name}"></strong><br><span class="muted" th:text="${d.user.email}"></span></td>
+                <td th:text="${d.registrationNumber}"></td>
+                <td th:text="${d.specialization.name}"></td>
+                <td th:text="${d.clinicName + ', ' + d.city}"></td>
+                <td th:text="${d.consultationFee}"></td>
+                <td><span class="status" th:classappend="${d.verificationStatus.name().toLowerCase()}" th:text="${d.verificationStatus}"></span></td>
+                <td>
+                    <form class="stack-actions" th:action="@{/admin/doctors/{id}/approve(id=${d.id})}" method="post">
+                        <input name="remark" placeholder="Remark">
+                        <button class="button success small">Approve</button>
+                    </form>
+                    <form class="inline-actions" th:action="@{/admin/doctors/{id}/reject(id=${d.id})}" method="post">
+                        <input name="remark" placeholder="Reason">
+                        <button class="button danger small">Reject</button>
+                    </form>
+                    <form th:action="@{/admin/doctors/{id}/suspend(id=${d.id})}" method="post">
+                        <button class="button warning small">Suspend</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </section>
+</main>
+</body>
+</html>

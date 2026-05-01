@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Doctor Slots')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav('Doctor Panel')}"></nav>
+<main class="container">
+    <h1>Manage Slots</h1>
+    <div class="alert danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert success" th:if="${param.created}">Slots created.</div>
+    <section class="panel split">
+        <form th:action="@{/doctor/slots}" method="post" class="form">
+            <label>Date</label><input type="date" name="date" th:min="${today}" required>
+            <label>Start Time</label><input type="time" name="start" required>
+            <label>End Time</label><input type="time" name="end" required>
+            <label>Duration Minutes</label><input type="number" name="duration" value="30" min="10" max="120" required>
+            <button class="button primary">Generate Slots</button>
+        </form>
+        <table>
+            <tr><th>Date</th><th>Time</th><th>Status</th></tr>
+            <tr th:each="s : ${slots}">
+                <td th:text="${s.slotDate}"></td>
+                <td th:text="${s.startTime + ' - ' + s.endTime}"></td>
+                <td><span class="status" th:classappend="${s.status.name().toLowerCase()}" th:text="${s.status}"></span></td>
+            </tr>
+        </table>
+    </section>
+</main>
+</body>
+</html>

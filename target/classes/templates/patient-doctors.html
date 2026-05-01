@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Find Doctors')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav('MediSlot Patient')}"></nav>
+<main class="container">
+    <h1>Find Verified Doctors</h1>
+    <section class="panel">
+        <form th:action="@{/patient/doctors}" method="get" class="filter-bar">
+            <select name="specializationId">
+                <option value="">All specializations</option>
+                <option th:each="s : ${specializations}" th:value="${s.id}" th:text="${s.name}" th:selected="${selectedSpecialization == s.id}"></option>
+            </select>
+            <input name="city" placeholder="City" th:value="${city}">
+            <button class="button primary">Search</button>
+        </form>
+    </section>
+    <section class="doctor-grid">
+        <article class="doctor-card" th:each="d : ${doctors}">
+            <h2 th:text="${d.user.name}"></h2>
+            <p class="muted" th:text="${d.specialization.name + ' | ' + d.qualification}"></p>
+            <p th:text="${d.clinicName + ', ' + d.city}"></p>
+            <p><strong>Reg:</strong> <span th:text="${d.registrationNumber}"></span></p>
+            <p><strong>Fee:</strong> Rs. <span th:text="${d.consultationFee}"></span></p>
+            <a class="button primary" th:href="@{/patient/doctors/{id}/slots(id=${d.user.id})}">View Slots</a>
+        </article>
+    </section>
+</main>
+</body>
+</html>

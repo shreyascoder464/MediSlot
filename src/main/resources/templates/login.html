@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MediSlot</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-page">
+<main class="auth-card">
+    <h1>Login</h1>
+    <p class="muted">Admin, doctor, and patient access.</p>
+    <div class="alert success" th:if="${success}" th:text="${success}"></div>
+    <div class="alert success" th:if="${param.logout}">Logged out successfully.</div>
+    <div class="alert danger" th:if="${param.expired}">Please login to continue.</div>
+    <div class="alert danger" th:if="${error}" th:text="${error}"></div>
+    <form th:action="@{/login}" method="post" class="form">
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Password</label>
+        <input type="password" name="password" required>
+        <button class="button primary" type="submit">Login</button>
+    </form>
+    <p class="switch-link"><a th:href="@{/register/patient}">Patient Signup</a> | <a th:href="@{/register/doctor}">Doctor Apply</a></p>
+    <p class="hint">Admin: admin@medislot.com / admin123</p>
+</main>
+</body>
+</html>

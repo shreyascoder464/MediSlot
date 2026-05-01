@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Patient Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav('MediSlot Patient')}"></nav>
+<main class="container">
+    <h1>Welcome, <span th:text="${name}"></span></h1>
+    <div class="alert success" th:if="${param.booked}">Appointment requested. Doctor approval pending.</div>
+    <div class="alert success" th:if="${param.cancelled}">Appointment cancelled.</div>
+    <div class="alert success" th:if="${param.reviewed}">Review submitted.</div>
+    <section class="panel">
+        <div class="panel-title"><h2>My Appointments</h2><a th:href="@{/patient/doctors}">Book New</a></div>
+        <table>
+            <tr><th>Doctor</th><th>Slot</th><th>Reason</th><th>Status</th><th>Action</th></tr>
+            <tr th:each="a : ${appointments}">
+                <td th:text="${a.doctor.name}"></td>
+                <td th:text="${a.slot.slotDate + ' ' + a.slot.startTime}"></td>
+                <td th:text="${a.reason}"></td>
+                <td><span class="status" th:classappend="${a.status.name().toLowerCase()}" th:text="${a.status}"></span></td>
+                <td>
+                    <form th:if="${a.status.name() == 'PENDING' || a.status.name() == 'APPROVED'}" th:action="@{/patient/appointments/{id}/cancel(id=${a.id})}" method="post">
+                        <button class="button danger small">Cancel</button>
+                    </form>
+                    <form th:if="${a.status.name() == 'COMPLETED'}" th:action="@{/patient/appointments/{id}/review(id=${a.id})}" method="post" class="inline-actions">
+                        <input type="number" name="rating" min="1" max="5" placeholder="1-5" required>
+                        <input name="comment" placeholder="Comment">
+                        <button class="button primary small">Review</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </section>
+    <section class="panel mt">
+        <h2>Notifications</h2>
+        <p th:if="${#lists.isEmpty(notifications)}" class="muted">No notifications.</p>
+        <div class="notice" th:each="n : ${notifications}">
+            <strong th:text="${n.title}"></strong>
+            <p th:text="${n.message}"></p>
+        </div>
+    </section>
+</main>
+</body>
+</html>
